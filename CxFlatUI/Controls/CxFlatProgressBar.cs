@@ -26,6 +26,12 @@ namespace CxFlatUI
                 Invalidate();
             }
         }
+        int _MaxValue=20;
+        public int MaxValue
+        {
+        get { return _MaxValue; }
+        set { _MaxValue = value; }
+        }
 
         private bool _isError = false;
         public bool IsError
@@ -44,7 +50,7 @@ namespace CxFlatUI
             get { return _valueNumber; }
             set
             {
-                _valueNumber = value > 100 ? 100 : (value < 0 ? 0 : value);
+                _valueNumber = value > _MaxValue ? _MaxValue : (value < 0 ? 0 : value);
                 Invalidate();
             }
         }
@@ -82,16 +88,16 @@ namespace CxFlatUI
             switch (_style)
             {
                 case Style.ToolTip:
-                    var x = _valueNumber * (Width - 32) / 100 + 16f;
+                    var x = _valueNumber * (Width - 32) / _MaxValue + 16f;
                     var y = 25;
-                    graphics.FillPolygon(new SolidBrush(_valueNumber == 100 && !_isError ? ThemeColors.Success : tempColor), new PointF[]
+                    graphics.FillPolygon(new SolidBrush(_valueNumber == _MaxValue && !_isError ? ThemeColors.Success : tempColor), new PointF[]
                     {
                          new PointF(x,y),new PointF(x+5,y-5),new PointF(x+16,y-5),new PointF(x+16,y-25),new PointF(x-16,y-25),new PointF(x-16,y-5),new PointF(x-5,y-5)
                     });
-                    graphics.DrawString(_valueNumber != 100 ? _valueNumber.ToString() : "ok!", Font, new SolidBrush(ThemeColors.FourLevelBorder), new RectangleF(x - 16, y - 25, 32, 20), StringAlign.Center);
+                    graphics.DrawString(_valueNumber != _MaxValue ? _valueNumber.ToString() : "ok!", Font, new SolidBrush(ThemeColors.FourLevelBorder), new RectangleF(x - 16, y - 25, 32, 20), StringAlign.Center);
 
                     graphics.FillRectangle(new SolidBrush(ThemeColors.OneLevelBorder), new RectangleF(16, 25, Width - 32, Height - 25));
-                    graphics.FillRectangle(new SolidBrush(_valueNumber == 100&&!_isError ? ThemeColors.Success : tempColor), new RectangleF(16, 25, x - 16, Height - 25));
+                    graphics.FillRectangle(new SolidBrush(_valueNumber == _MaxValue&&!_isError ? ThemeColors.Success : tempColor), new RectangleF(16, 25, x - 16, Height - 25));
                     break;
 
                 case Style.ValueInSide:
@@ -109,9 +115,9 @@ namespace CxFlatUI
                     {
                         var path2 = new GraphicsPath();
                         path2.AddArc(new RectangleF(0, 0, Height, Height), 90, 180);
-                        path2.AddArc(new RectangleF(_valueNumber * (Width - Height) / 100, 0, Height, Height), -90, 180);
+                        path2.AddArc(new RectangleF(_valueNumber * (Width - Height) / _MaxValue, 0, Height, Height), -90, 180);
                         path2.CloseAllFigures();
-                        graphics.FillPath(new SolidBrush(_valueNumber == 100&&!_isError ? ThemeColors.Success : tempColor), path2);
+                        graphics.FillPath(new SolidBrush(_valueNumber == _MaxValue&&!_isError ? ThemeColors.Success : tempColor), path2);
 
                         graphics.DrawString(_valueNumber.ToString() + , new Font("微软雅黑", 9f), new SolidBrush(ThemeColors.FourLevelBorder), new RectangleF(_valueNumber * (Width -Height) / 100 - 33, 0, 45, Height), StringAlign.Right);
                     }
@@ -127,9 +133,9 @@ namespace CxFlatUI
                     {
                         var path4 = new GraphicsPath();
                         path4.AddArc(new RectangleF(0, 4, Height-8, Height-8), 90, 180);
-                        path4.AddArc(new RectangleF(_valueNumber * (Width - 50) / 100, 4, Height-8, Height-8), -90, 180);
+                        path4.AddArc(new RectangleF(_valueNumber * (Width - 50) / _MaxValue, 4, Height-8, Height-8), -90, 180);
                         path4.CloseAllFigures();
-                        graphics.FillPath(new SolidBrush(_valueNumber == 100&&!_isError ? ThemeColors.Success : tempColor), path4);
+                        graphics.FillPath(new SolidBrush(_valueNumber == _MaxValue&&!_isError ? ThemeColors.Success : tempColor), path4);
                     }
 
                     if(_isError)
@@ -142,7 +148,7 @@ namespace CxFlatUI
                     }
                     else
                     {
-                        if(_valueNumber==100)
+                        if(_valueNumber==_MaxValue)
                         {
                             graphics.FillEllipse(new SolidBrush(ThemeColors.Success), new RectangleF(Width - 40, 0, Height, Height));
                             var a = Width - 40 + 4;
